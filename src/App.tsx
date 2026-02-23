@@ -10,17 +10,21 @@ import { glContextSet } from "@zappar/zappar-threejs";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-import glb from "./assets/waving.glb";
+import glb from "./assets/personaje_fut_comp.glb";
 
 const Model = () => {
-    const timer = new THREE.Timer();
     const gltf = useLoader(GLTFLoader, glb) as any;
     const mixer = new THREE.AnimationMixer(gltf.scene);
-    mixer.clipAction(gltf.animations[0]).play();
 
-    useFrame(() => { timer.update(); mixer.update(timer.getDelta()); });
+    if (gltf.animations && gltf.animations.length > 0) {
+        mixer.clipAction(gltf.animations[0]).play();
+    }
 
-    return <primitive object={gltf.scene} position={[0, -1, 0]} />;
+    useFrame((_, delta) => {
+        mixer.update(delta);
+    });
+
+    return <primitive object={gltf.scene} position={[0, -1, 0]} scale={1.4} />;
 };
 
 function App() {
@@ -29,7 +33,11 @@ function App() {
     return (
         <>
             <BrowserCompatibility />
-            <ZapparCanvas {...{ onCreated: (state: any) => glContextSet(state.gl.getContext()) } as any}>
+            <ZapparCanvas
+                {...({
+                    onCreated: (state: any) =>
+                        glContextSet(state.gl.getContext()),
+                } as any)}>
                 <ZapparCamera permissionRequest />
                 <InstantTracker
                     placementMode={placementMode}
@@ -37,7 +45,7 @@ function App() {
                     <Suspense fallback={null}>
                         <Model />
                     </Suspense>
-                    <directionalLight position={[2.5, 8, 5]} intensity={1.5} />
+                    <directionalLight position={[1, 5, 5]} intensity={3} />
                 </InstantTracker>
             </ZapparCanvas>
             <div
