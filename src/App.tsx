@@ -32,7 +32,7 @@ const Model = () => {
         mixer.update(delta);
     });
 
-    return <primitive object={gltf.scene} position={[0, -1, 0]} scale={1.7} />;
+    return <primitive object={gltf.scene} position={[0, -1, 0]} scale={2} />;
 };
 
 function App() {
@@ -53,7 +53,7 @@ function App() {
                     <Suspense fallback={null}>
                         <Model />
                     </Suspense>
-                    <directionalLight position={[0, 3, 5]} intensity={3} />
+                    <directionalLight position={[2.5, 8, 5]} intensity={3} />
                 </InstantTracker>
             </ZapparCanvas>
             <div
