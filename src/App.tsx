@@ -9,11 +9,19 @@ import {
 import { glContextSet } from "@zappar/zappar-threejs";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 
 import glb from "./assets/personaje_fut_comp.glb";
 
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath(
+    "https://www.gstatic.com/draco/versioned/decoders/1.5.6/",
+);
+
 const Model = () => {
-    const gltf = useLoader(GLTFLoader, glb) as any;
+    const gltf = useLoader(GLTFLoader, glb, (loader) => {
+        loader.setDRACOLoader(dracoLoader);
+    }) as any;
     const mixer = new THREE.AnimationMixer(gltf.scene);
 
     if (gltf.animations && gltf.animations.length > 0) {
@@ -45,7 +53,7 @@ function App() {
                     <Suspense fallback={null}>
                         <Model />
                     </Suspense>
-                    <directionalLight position={[1, 5, 5]} intensity={3} />
+                    <directionalLight position={[0, 3, 5]} intensity={5} />
                 </InstantTracker>
             </ZapparCanvas>
             <div
